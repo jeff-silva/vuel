@@ -4,9 +4,6 @@ function Vuel(tag, params) {
 	var templateHTML = (document.currentScript? document.currentScript.ownerDocument.getElementById(tag).innerHTML: "");
 	var proto = Object.create(HTMLElement.prototype);
 
-	for(var i in (params.methods||[])) {
-		proto[i] = params.methods[i];
-	}
 
 	proto.createdCallback = function() {};
 	proto.attachedCallback = function() {
@@ -27,7 +24,14 @@ function Vuel(tag, params) {
 		this.innerHTML = "<div>"+ templateHTML +"</div>";
 
 		params.el = this.children[0];
-		new Vue(params);
+		var app = new Vue(params);
+		
+		for(var i in (params.methods||[])) {
+			console.log(i);
+			proto[i] = app[i];
+		}
 	};
+
+
 	return document.registerElement(tag, {prototype: proto});
 }

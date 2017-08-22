@@ -22,7 +22,11 @@
 		<hr>
 
 		<link rel="import" href="vuel-methods.html">
-		<vuel-methods></vuel-methods>
+		<vuel-methods id="vuel-methods-id"></vuel-methods>
+		<br>
+		<p>Call methods outside app:</p>
+		<button class="btn btn-default" onclick="document.getElementById('vuel-methods-id').helloWorld();">Hello World</button>
+		<button class="btn btn-default" onclick="document.getElementById('vuel-methods-id').helloDolly();">Hello Dolly</button>
 
 		<hr>
 
