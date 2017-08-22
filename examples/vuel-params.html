@@ -1,0 +1,14 @@
+<template id="vuel-params">
+	Hello {{ attr.hello }}
+</template>
+
+
+<script>
+var VuelParams = new Vuel("vuel-params", {
+	data: {
+		attr: {
+			hello: "Default",
+		},
+	},
+});
+</script>

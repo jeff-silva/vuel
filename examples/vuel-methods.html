@@ -1,0 +1,23 @@
+<template id="vuel-methods">
+	Hello {{ hello }} <br>
+	<button class="btn btn-primary" @click="helloWorld();">World</button>
+	<button class="btn btn-primary" @click="helloDolly();">Dolly</button>
+</template>
+
+
+<script>
+var VuelMethods = new Vuel("vuel-methods", {
+	data: {
+		hello: "World",
+	},
+	methods: {
+		helloWorld: function() {
+			this.hello = "World";
+		},
+
+		helloDolly: function() {
+			this.hello = "Dolly";
+		},
+	},
+});
+</script>

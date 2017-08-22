@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+	<script src="../dist/vuel.min.js"></script>
+</head>
+<body>
+
+	<div style="max-width:600px; margin:50px auto;">
+		
+		<link rel="import" href="vuel-simple.html">
+		<vuel-simple></vuel-simple>
+
+		<hr>
+
+		<link rel="import" href="vuel-params.html">
+		<vuel-params hello="World"></vuel-params>
+
+		<hr>
+
+		<link rel="import" href="vuel-methods.html">
+		<vuel-methods></vuel-methods>
+
+		<hr>
+
+		<link rel="import" href="vuel-template.html">
+		<template id="alternative-template">Ignore the original template and use alternative</template>
+		<vuel-template template="alternative-template"></vuel-template>
+
+		<hr>
+
+		<link rel="import" href="vuel-content.html">
+		<vuel-content>Hello World</vuel-content>
+
+	</div>
+
+</body>
+</html>
