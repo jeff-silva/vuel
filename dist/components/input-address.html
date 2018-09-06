@@ -1,0 +1,190 @@
+<script src="../vuel.min.js"></script>
+
+<template id="input-address">
+	<div>
+		<!-- layout 0 -->
+		<div class="row" v-if="layout==0">
+			<div class="col-sm-6 input-address-margin">
+				<div class="input-group">
+					<input type="text" class="form-control input-address-autocomplete" placeholder="Pesquisar" v-model="params.search" @keyup.enter="_search();">
+					<div class="input-group-btn">
+						<button type="button" class="btn btn-default" @click="_search();">
+							<i class="fa fa-fw fa-spin fa-spinner" v-if="loading"></i>
+							<i class="fa fa-fw fa-search" v-else></i>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6"><div class="text-danger">{{ error }}</div></div>
+			<div class="col-sm-10 input-address-margin"><input type="text" class="form-control" placeholder="Rua" v-model="value.route"></div>
+			<div class="col-sm-2 col-xs-4 input-address-margin"><input type="text" class="form-control" placeholder="Nº" v-model="value.number"></div>
+			<div class="col-sm-4 col-xs-8 input-address-margin"><input type="text" class="form-control" placeholder="Complemento" v-model="value.complement"></div>
+			<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="CEP" v-model="value.postal"></div>
+			<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="Bairro" v-model="value.district"></div>
+			<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="Cidade" v-model="value.city"></div>
+			<div class="col-sm-4 col-xs-3 input-address-margin"><input type="text" class="form-control" placeholder="Estado" v-model="value.state"></div>
+			<div class="col-sm-4 col-xs-3 input-address-margin"><input type="text" class="form-control" placeholder="País" v-model="value.country"></div>
+			<div class="col-xs-12">
+				<iframe :src="value.embed" style="width:100%; height:200px; border:none;" v-if="value.embed"></iframe>
+			</div>
+		</div>
+		<!-- layout 0 -->
+
+		<!-- layout 1 -->
+		<div v-if="layout==1">
+			<div class="input-group">
+				<input type="text" v-model="_formatted()" class="form-control" @focus="_modal('.modal-layout-1');" readonly="readonly">
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default" @click="_modal('.modal-layout-1');">
+						<i class="fa fa-fw fa-globe"></i>
+					</button>
+				</div>
+			</div>
+			<div class="modal fade modal-layout-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title">Pesquisar endereço</h4>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-sm-6 input-address-margin">
+									<div class="input-group">
+										<input type="text" class="form-control input-address-autocomplete" placeholder="Pesquisar" v-model="params.search" @keyup.enter="_search();">
+										<div class="input-group-btn">
+											<button type="button" class="btn btn-default" @click="_search();">
+												<i class="fa fa-fw fa-spin fa-spinner" v-if="loading"></i>
+												<i class="fa fa-fw fa-search" v-else></i>
+											</button>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6"><div class="text-danger">{{ error }}</div></div>
+								<div class="col-sm-10 input-address-margin"><input type="text" class="form-control" placeholder="Rua" v-model="value.route"></div>
+								<div class="col-sm-2 col-xs-4 input-address-margin"><input type="text" class="form-control" placeholder="Nº" v-model="value.number"></div>
+								<div class="col-sm-4 col-xs-8 input-address-margin"><input type="text" class="form-control" placeholder="Complemento" v-model="value.complement"></div>
+								<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="CEP" v-model="value.postal"></div>
+								<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="Bairro" v-model="value.district"></div>
+								<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="Cidade" v-model="value.city"></div>
+								<div class="col-sm-4 col-xs-3 input-address-margin"><input type="text" class="form-control" placeholder="Estado" v-model="value.state"></div>
+								<div class="col-sm-4 col-xs-3 input-address-margin"><input type="text" class="form-control" placeholder="País" v-model="value.country"></div>
+								<div class="col-xs-12">
+									<iframe :src="value.embed" style="width:100%; height:200px; border:none;" v-if="value.embed"></iframe>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- layout 1 -->
+
+		<!-- <pre>{{ $data }}</pre> -->
+	</div>
+</template>
+
+<style>
+input-address {display:block;}
+input-address .input-address-margin {margin-bottom:10px;}
+</style>
+
+<script>
+Vue.vuel("input-address", {
+	data: {
+		name: "",
+		value: {
+			label: "",
+			formatted_address: "",
+			route: "",
+			number: "",
+			complement: "",
+			postal: "",
+			district: "",
+			city: "",
+			state: "",
+			state_short: "",
+			country: "",
+			country_short: "",
+			lat: "",
+			lng: "",
+			embed: "",
+			image: "",
+		},
+		key: "AIzaSyB-Li2nMHdkyiJVLubSOtxZZEqGkmxRpvs",
+		preview: "embed", // false, embed, image
+		params: {method:"", search:""},
+		error: "",
+		loading: "",
+		layout: "0",
+	},
+	methods: {
+		_modal: function(className) {
+			var vm=this, $=jQuery;
+			$(className).modal("hide");
+			$(vm.$el).find(className).modal("show");
+		},
+		_search: function() {
+			var vm=this, $=jQuery;
+			Vue.set(vm, "error", "");
+			Vue.set(vm, "loading", "Carregando");
+			vm.params.method="search";
+			$.get(vm.baseDir+"/actions.php", vm.params, function(resp) {
+				if (resp.error) { Vue.set(vm, "error", resp.error); }
+				else { Vue.set(vm, "value", resp.success); }
+				Vue.set(vm, "loading", "");
+			}, "json");
+		},
+		_formatted: function() {
+			var vm=this, ret=[];
+			if (vm.value.route) ret.push(vm.value.route);
+			if (vm.value.number) ret.push("Nº"+vm.value.number);
+			if (vm.value.complement) ret.push(vm.value.complement);
+			if (vm.value.postal) ret.push("CEP "+vm.value.postal);
+			if (vm.value.city && vm.value.state_short) ret.push(vm.value.city+"/"+vm.value.state_short);
+			return ret.join(", ");
+		},
+	},
+
+	mounted: function() {
+		var vm=this, $=jQuery;
+	},
+});
+</script>
+
+
+<!-- {
+	"address_components":[
+		{"long_name":"13","short_name":"13","types":["street_number"]},
+		{"long_name":"Rua Ozenil José de Oliveira","short_name":"R. Ozenil José de Oliveira","types":["route"]},
+		{"long_name":"Jaqueline","short_name":"Jaqueline","types":["sublocality_level_1","sublocality","political"]},
+		{"long_name":"Belo Horizonte","short_name":"Belo Horizonte","types":["administrative_area_level_2","political"]},
+		{"long_name":"Minas Gerais","short_name":"MG","types":["administrative_area_level_1","political"]},
+		{"long_name":"Brasil","short_name":"BR","types":["country","political"]},
+		{"long_name":"31748-315","short_name":"31748-315","types":["postal_code"]}
+	],
+	"adr_address":"<span class=\"street-address\">R. Ozenil José de Oliveira, 13</span> - <span class=\"extended-address\">Jaqueline</span>, <span class=\"locality\">Belo Horizonte</span> - <span class=\"region\">MG</span>, <span class=\"postal-code\">31748-315</span>, <span class=\"country-name\">Brasil</span>",
+	"formatted_address":"R. Ozenil José de Oliveira, 13 - Jaqueline, Belo Horizonte - MG, 31748-315, Brasil",
+	"geometry":{
+		"location":{"lat":-19.8046076,"lng":-43.93290719999999},
+		"viewport":{"south":-19.8059528802915,"west":-43.9342640302915,"north":-19.8032549197085,"east":-43.93156606970854}
+	},
+	"icon":"https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png",
+	"id":"c633b56c31707820dd406d3b93f829a48f3a9b75",
+	"name":"R. Ozenil José de Oliveira, 13",
+	"place_id":"ChIJmyjQyXCFpgAREkHTBVdPPhc",
+	"plus_code":{
+		"compound_code":"53W8+5R Belo Horizonte, MG, Brasil",
+		"global_code":"58GR53W8+5R"
+	},
+	"reference":"CmRbAAAAIA5zdzAY0XXz2ydJs7JpW5Xow9ovTCf9GjaDX78L__tHwyqNub23A1VUWEBJXe9fiq61PMkmHC6VERrq4_V10cxQiLF-VZO6GXnONBzKFXj0FuYICPWg3pUmQm8uSXb-EhAgiCTivFThYq55Ie2zn-k7GhRjMHL1H8CAzS4cWrXeSBZJUHuorQ",
+	"scope":"GOOGLE",
+	"types":["street_address"],
+	"url":"https://maps.google.com/?q=R.+Ozenil+Jos%C3%A9+de+Oliveira,+13+-+Jaqueline,+Belo+Horizonte+-+MG,+31748-315,+Brasil&ftid=0xa68570c9d0289b:0x173e4f5705d34112",
+	"utc_offset":-180,
+	"vicinity":"Jaqueline",
+	"html_attributions":[]
+} -->

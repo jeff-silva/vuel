@@ -1,0 +1,30 @@
+<script src="../vuel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.5.1/dist/flatpickr.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.5.1/dist/flatpickr.min.css">
+
+<template id="input-flatpickr">
+	<input type="text" class="form-control input-flatpickr-input" :name="name" v-model="value">
+</template>
+
+<script>
+Vue.vuel("input-flatpickr", {
+	data: {
+		name: "",
+		value: "",
+		options: {},
+	},
+	mounted: function() {
+		var vm=this;
+		var $input = $(vm.$el).find(".input-flatpickr-input");
+
+		var options = JSON.parse(JSON.stringify(vm.options));
+		options.enableTime = ((typeof options.enableTime=="undefined")? true: options.enableTime);
+		options.time_24hr = ((typeof options.time_24hr=="undefined")? true: options.time_24hr);
+		options.altInput = true;
+		options.altFormat = "d/m/Y - H:i:S";
+		options.altInputClass = "form-control";
+		options.dateFormat = "Y-m-d H:i:S";
+		$input.flatpickr(options);
+	},
+});
+</script>
