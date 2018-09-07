@@ -1,4 +1,4 @@
-<script src="../vuel.min.js"></script>
+<script src="../vuel.js"></script>
 
 <template id="input-address">
 	<div>
@@ -6,27 +6,24 @@
 		<div class="row" v-if="layout==0">
 			<div class="col-sm-6 input-address-margin">
 				<div class="input-group">
-					<input type="text" class="form-control input-address-autocomplete" placeholder="Pesquisar" v-model="params.search" @keyup.enter="_search();">
+					<input type="text" class="form-control input-address-autocomplete" placeholder="Pesquisar" v-model="params.search">
 					<div class="input-group-btn">
-						<button type="button" class="btn btn-default" @click="_search();">
+						<button type="button" class="btn btn-default">
 							<i class="fa fa-fw fa-spin fa-spinner" v-if="loading"></i>
 							<i class="fa fa-fw fa-search" v-else></i>
 						</button>
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-6"><div class="text-danger">{{ error }}</div></div>
-			<div class="col-sm-10 input-address-margin"><input type="text" class="form-control" placeholder="Rua" v-model="value.route"></div>
-			<div class="col-sm-2 col-xs-4 input-address-margin"><input type="text" class="form-control" placeholder="Nº" v-model="value.number"></div>
-			<div class="col-sm-4 col-xs-8 input-address-margin"><input type="text" class="form-control" placeholder="Complemento" v-model="value.complement"></div>
-			<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="CEP" v-model="value.postal"></div>
-			<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="Bairro" v-model="value.district"></div>
-			<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="Cidade" v-model="value.city"></div>
-			<div class="col-sm-4 col-xs-3 input-address-margin"><input type="text" class="form-control" placeholder="Estado" v-model="value.state"></div>
-			<div class="col-sm-4 col-xs-3 input-address-margin"><input type="text" class="form-control" placeholder="País" v-model="value.country"></div>
-			<div class="col-xs-12">
-				<iframe :src="value.embed" style="width:100%; height:200px; border:none;" v-if="value.embed"></iframe>
-			</div>
+			<div class="col-sm-6">&nbsp;</div>
+			<div class="col-sm-10 input-address-margin"><input type="text" class="form-control" placeholder="Rua" v-model="value.addr_route"></div>
+			<div class="col-sm-2 col-xs-4 input-address-margin"><input type="text" class="form-control" placeholder="Nº" v-model="value.addr_number"></div>
+			<div class="col-sm-4 col-xs-8 input-address-margin"><input type="text" class="form-control" placeholder="Complemento" v-model="value.addr_complement"></div>
+			<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="CEP" v-model="value.addr_postal"></div>
+			<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="Bairro" v-model="value.addr_district"></div>
+			<div class="col-sm-8 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="Cidade" v-model="value.addr_city"></div>
+			<div class="col-sm-4 col-xs-3 input-address-margin"><div class="form-control">{{ value.addr_state }}, {{ value.addr_country }}</div></div>
+			<div class="col-sm-12" v-if="map==1"><div class="input-address-map" style="width:100%; height:250px;"></div></div>
 		</div>
 		<!-- layout 0 -->
 
@@ -51,27 +48,25 @@
 							<div class="row">
 								<div class="col-sm-6 input-address-margin">
 									<div class="input-group">
-										<input type="text" class="form-control input-address-autocomplete" placeholder="Pesquisar" v-model="params.search" @keyup.enter="_search();">
+										<input type="text" class="form-control input-address-autocomplete" placeholder="Pesquisar" v-model="params.search">
 										<div class="input-group-btn">
-											<button type="button" class="btn btn-default" @click="_search();">
+											<button type="button" class="btn btn-default">
 												<i class="fa fa-fw fa-spin fa-spinner" v-if="loading"></i>
 												<i class="fa fa-fw fa-search" v-else></i>
 											</button>
 										</div>
 									</div>
 								</div>
-								<div class="col-sm-6"><div class="text-danger">{{ error }}</div></div>
-								<div class="col-sm-10 input-address-margin"><input type="text" class="form-control" placeholder="Rua" v-model="value.route"></div>
-								<div class="col-sm-2 col-xs-4 input-address-margin"><input type="text" class="form-control" placeholder="Nº" v-model="value.number"></div>
-								<div class="col-sm-4 col-xs-8 input-address-margin"><input type="text" class="form-control" placeholder="Complemento" v-model="value.complement"></div>
-								<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="CEP" v-model="value.postal"></div>
-								<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="Bairro" v-model="value.district"></div>
-								<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="Cidade" v-model="value.city"></div>
-								<div class="col-sm-4 col-xs-3 input-address-margin"><input type="text" class="form-control" placeholder="Estado" v-model="value.state"></div>
-								<div class="col-sm-4 col-xs-3 input-address-margin"><input type="text" class="form-control" placeholder="País" v-model="value.country"></div>
-								<div class="col-xs-12">
-									<iframe :src="value.embed" style="width:100%; height:200px; border:none;" v-if="value.embed"></iframe>
-								</div>
+								<div class="col-sm-6">&nbsp;</div>
+								<div class="col-sm-10 input-address-margin"><input type="text" class="form-control" placeholder="Rua" v-model="value.addr_route"></div>
+								<div class="col-sm-2 col-xs-4 input-address-margin"><input type="text" class="form-control" placeholder="Nº" v-model="value.addr_number"></div>
+								<div class="col-sm-4 col-xs-8 input-address-margin"><input type="text" class="form-control" placeholder="Complemento" v-model="value.addr_complement"></div>
+								<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="CEP" v-model="value.addr_postal"></div>
+								<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="Bairro" v-model="value.addr_district"></div>
+								<div class="col-sm-4 col-xs-6 input-address-margin"><input type="text" class="form-control" placeholder="Cidade" v-model="value.addr_city"></div>
+								<div class="col-sm-4 col-xs-3 input-address-margin"><input type="text" class="form-control" placeholder="Estado" v-model="value.addr_state"></div>
+								<div class="col-sm-4 col-xs-3 input-address-margin"><input type="text" class="form-control" placeholder="País" v-model="value.addr_country"></div>
+								<div class="col-sm-12" v-if="map==1"><div class="input-address-map" style="width:100%; height:250px;"></div></div>
 							</div>
 						</div>
 						<div class="modal-footer">
@@ -83,7 +78,7 @@
 		</div>
 		<!-- layout 1 -->
 
-		<!-- <pre>{{ $data }}</pre> -->
+		<pre>{{ $data }}</pre>
 	</div>
 </template>
 
@@ -97,27 +92,25 @@ Vue.vuel("input-address", {
 	data: {
 		name: "",
 		value: {
-			label: "",
-			formatted_address: "",
-			route: "",
-			number: "",
-			complement: "",
-			postal: "",
-			district: "",
-			city: "",
-			state: "",
-			state_short: "",
-			country: "",
-			country_short: "",
-			lat: "",
-			lng: "",
-			embed: "",
-			image: "",
+			"addr_route": "",
+			"addr_number": "",
+			"addr_complement": "",
+			"addr_postal": "",
+			"addr_district": "",
+			"addr_city": "",
+			"addr_state": "",
+			"addr_state_short": "",
+			"addr_country": "",
+			"addr_country_short": "",
+			"addr_lat": "",
+			"addr_lng": "",
+			"addr_place_id": "",
+			"addr_image": "",
+			"addr_embed": "",
+			"addr_formatted": "",
 		},
-		key: "AIzaSyB-Li2nMHdkyiJVLubSOtxZZEqGkmxRpvs",
-		preview: "embed", // false, embed, image
-		params: {method:"", search:""},
-		error: "",
+		map: 1, // 0=no map editor, 1=with map editor
+		params: {search:""},
 		loading: "",
 		layout: "0",
 	},
@@ -127,30 +120,120 @@ Vue.vuel("input-address", {
 			$(className).modal("hide");
 			$(vm.$el).find(className).modal("show");
 		},
-		_search: function() {
-			var vm=this, $=jQuery;
-			Vue.set(vm, "error", "");
-			Vue.set(vm, "loading", "Carregando");
-			vm.params.method="search";
-			$.get(vm.baseDir+"/actions.php", vm.params, function(resp) {
-				if (resp.error) { Vue.set(vm, "error", resp.error); }
-				else { Vue.set(vm, "value", resp.success); }
-				Vue.set(vm, "loading", "");
-			}, "json");
+
+		_setAddress: function(place, map, marker) {
+			var vm=this;
+
+			// clear only addr value attributes, meta may keep
+			Vue.set(vm.value, "addr_route", "");
+			Vue.set(vm.value, "addr_number", "");
+			Vue.set(vm.value, "addr_complement", "");
+			Vue.set(vm.value, "addr_postal", "");
+			Vue.set(vm.value, "addr_district", "");
+			Vue.set(vm.value, "addr_city", "");
+			Vue.set(vm.value, "addr_state", "");
+			Vue.set(vm.value, "addr_state_short", "");
+			Vue.set(vm.value, "addr_country", "");
+			Vue.set(vm.value, "addr_country_short", "");
+			Vue.set(vm.value, "addr_lat", "");
+			Vue.set(vm.value, "addr_lng", "");
+			Vue.set(vm.value, "addr_place_id", "");
+			Vue.set(vm.value, "addr_image", "");
+			Vue.set(vm.value, "addr_embed", "");
+			Vue.set(vm.value, "addr_formatted", "");
+
+			for(var i in place.address_components) {
+				var comp = place.address_components[i];
+				if (comp.types[0]=="street_number") Vue.set(vm.value, "addr_number", comp.long_name);
+				else if (comp.types[0]=="route") Vue.set(vm.value, "addr_route", comp.long_name);
+				else if (comp.types[0]=="sublocality_level_1") Vue.set(vm.value, "addr_district", comp.long_name);
+				else if (comp.types[0]=="administrative_area_level_2") Vue.set(vm.value, "addr_city", comp.long_name);
+				else if (comp.types[0]=="postal_code") Vue.set(vm.value, "addr_postal", comp.long_name);
+				else if (comp.types[0]=="administrative_area_level_1") {
+					Vue.set(vm.value, "addr_state", comp.long_name);
+					Vue.set(vm.value, "addr_state_short", comp.short_name);
+				}
+				else if (comp.types[0]=="country") {
+					Vue.set(vm.value, "addr_country", comp.long_name);
+					Vue.set(vm.value, "addr_country_short", comp.short_name);
+				}
+			}
+
+			Vue.set(vm.value, "addr_formatted", place.formatted_address);
+			Vue.set(vm.value, "addr_lat", place.geometry.location.lat());
+			Vue.set(vm.value, "addr_lng", place.geometry.location.lng());
+			Vue.set(vm.value, "addr_place_id", place.place_id);
+			Vue.set(vm.value, "addr_embed", place.url+"&output=embed");
+			Vue.set(vm.value, "addr_image", "https://maps.googleapis.com/maps/api/staticmap?center="+vm.value.lat+","+vm.value.lng+"&zoom=14&size=800x300&maptype=roadmap&key=AIzaSyB-Li2nMHdkyiJVLubSOtxZZEqGkmxRpvs");
+
+			if (!vm.value.addr_postal) {
+				var cep = "https://viacep.com.br/ws/"+vm.value.addr_state_short+"/"+vm.value.addr_city+"/"+vm.value.addr_route+"/json/".replace(/\s/i, '%20');
+				cep = $.ajax({url:cep, method:"GET", dataType:"json", async:false}).responseJSON;
+				if (cep[0]) Vue.set(vm.value, "addr_postal", cep[0].cep);
+			}
+
+			if (vm.value.addr_postal && !vm.value.addr_route) {
+				var cep = "https://viacep.com.br/ws/"+ vm.value.addr_postal.replace(/[^0-9]/i, '') +"/json/";
+				cep = $.ajax({url:cep, method:"GET", dataType:"json", async:false}).responseJSON;
+				if (cep.logradouro) Vue.set(vm.value, "addr_route", cep.logradouro);
+			}
+
+			if (map) {
+				var latlng = new google.maps.LatLng(vm.value.addr_lat, vm.value.addr_lng);
+				map.panTo(latlng);
+				marker.setPosition(latlng);
+			}
 		},
+
 		_formatted: function() {
 			var vm=this, ret=[];
-			if (vm.value.route) ret.push(vm.value.route);
-			if (vm.value.number) ret.push("Nº"+vm.value.number);
-			if (vm.value.complement) ret.push(vm.value.complement);
-			if (vm.value.postal) ret.push("CEP "+vm.value.postal);
-			if (vm.value.city && vm.value.state_short) ret.push(vm.value.city+"/"+vm.value.state_short);
+			if (vm.value.addr_route) ret.push(vm.value.addr_route);
+			if (vm.value.addr_number) ret.push("Nº"+vm.value.addr_number);
+			if (vm.value.addr_complement) ret.push(vm.value.addr_complement);
+			if (vm.value.addr_postal) ret.push("CEP "+vm.value.addr_postal);
+			if (vm.value.addr_city && vm.value.addr_state_short) ret.push(vm.value.addr_city+"/"+vm.value.addr_state_short);
 			return ret.join(", ");
 		},
 	},
 
 	mounted: function() {
 		var vm=this, $=jQuery;
+
+		var $map = $(vm.$el).find(".input-address-map");
+		var map=false, marker=false;
+		var latlng = new google.maps.LatLng(vm.value.addr_lat, vm.value.addr_lng);
+
+		if ($map[0]) {
+			map = new google.maps.Map($map[0], {
+				center: latlng,
+				zoom: 17,
+			});
+
+			var marker = new google.maps.Marker({
+				position: latlng,
+				map: map,
+				draggable: true,
+			});
+
+			marker.addListener('dragend', function(ev) {
+				var geocoder = new google.maps.Geocoder;
+				var latlng = {lat:ev.latLng.lat(), lng:ev.latLng.lng()};
+				geocoder.geocode({'location': latlng}, function(results, status) {
+					vm._setAddress(results[0], map, marker);
+				});
+			});
+		}
+
+
+		$(vm.$el).find(".input-address-autocomplete").each(function() {
+			var autocomplete = new google.maps.places.Autocomplete(this);
+			autocomplete.addListener('place_changed', function() {
+				var place = autocomplete.getPlace();
+				vm._setAddress(place, map, marker);
+				Vue.set(vm.params, "search", "");
+			});
+		});
+			
 	},
 });
 </script>

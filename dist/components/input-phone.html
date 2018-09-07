@@ -1,24 +1,25 @@
 <script src="../vuel.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icon-css@3.0.0/css/flag-icon.min.css">
-<script src="https://cdn.jsdelivr.net/npm/jquery-mask-plugin@1.14.15/dist/jquery.mask.min.js"></script>
 
 <template id="input-phone">
 	<div>
-		<div class="input-group">
+
+		<div class="input-group mb-3">
 			<div class="input-group-prepend">
-				<div class="input-group-text">
-					<div :class="country.className"></div>
-					<div class="list-group input-phone-countries-dropdown" style="display:none;">
-						<div class="list-group-item" v-for="c in countries" @click="_setCountry(c);">
-							<span :class="c.className"></span> &nbsp;
-							{{ c.name }}
-						</div>
-					</div>
+				<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i :class="country.className"></i> 
+				</button>
+				<div class="dropdown-menu" style="max-height:300px; overflow:auto;">
+					<a class="dropdown-item" href="javascript:;" v-for="c in countries" @click="_setCountry(c);">
+						<span :class="c.className"></span> &nbsp;
+						{{ c.name }}
+					</a>
 				</div>
 			</div>
-			<input type="text" class="form-control input-phone-input" :name="name" :placeholder="country.mask" v-model="phone">
+			<input type="text" class="form-control" aria-label="Text input with dropdown button" :placeholder="country.mask" v-model="phone" @keyup="_setNumber(phone);">
 		</div>
-		<pre>{{ $data }}</pre>
+
+		<!-- <pre>{{ $data }}</pre> -->
 	</div>
 </template>
 
@@ -26,7 +27,12 @@
 Vue.vuel("input-phone", {
 	data: {
 		name: "",
-		value: "",
+		value: {
+			formatted: "",
+			number: "",
+			href: "",
+			whatsapp: "",
+		},
 		phone: "",
 		country: {
 			"code": "+55",
@@ -38,45 +44,61 @@ Vue.vuel("input-phone", {
 			{code:"+55", name:"Brasil", className:"flag-icon flag-icon-br", mask:"(00) 00000-0000"},
 			{code:"+1", name:"USA", className:"flag-icon flag-icon-us", mask:"000-000"},
 			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
+			{code:"+351", name:"Portugal", className:"flag-icon flag-icon-pt", mask:"00-0000"},
 		],
 	},
 	methods: {
 		_setCountry: function(country) {
 			var vm=this, $=jQuery;
 			Vue.set(vm, "country", country);
-			Vue.set(vm, "value", vm.country.code+" "+vm.phone);
+			vm._setNumber(vm.phone);
+			$(vm.$el).find(".input-phone-countries-dropdown").slideUp(200);
+		},
+
+		_setNumber: function(number) {
+			var vm=this, $=jQuery, raw=false;
+			raw = (vm.country.code+number).replace(/[^0-9]/g, '');
+			Vue.set(vm.value, "formatted", number);
+			Vue.set(vm.value, "number", "+"+raw);
+			Vue.set(vm.value, "href", "tel:+"+raw);
+			Vue.set(vm.value, "whatsapp", "https://api.whatsapp.com/send?phone="+raw);
 		},
 	},
 	mounted: function() {
 		var vm=this, $=jQuery;
-		$(vm.$el).find(".input-phone-input").on("focus", function() {
+		$(vm.$el).find(".input-phone-countries-click").on("click", function(ev) {
+			ev.stopPropagation();
 			$(vm.$el).find(".input-phone-countries-dropdown").slideDown(200);
 		});
-		$(vm.$el).find(".input-phone-input").on("blur", function() {
-			setTimeout(function() {
-				$(vm.$el).find(".input-phone-countries-dropdown").slideUp(200);
-			}, 50);
-		});
-		$(vm.$el).find(".input-phone-input").on("keyup", function() {
-			Vue.set(vm, "value", vm.country.code+" "+vm.phone);
-		});
-
-		var SPMaskBehavior = function (val) { return vm.country.mask; },
-		spOptions = {
-			onKeyPress: function(val, e, field, options) {
-				// field.mask(SPMaskBehavior.apply({}, arguments), options);
-				field.mask(vm.country.mask, options);
-			}
-		};
-
-		$(vm.$el).find(".input-phone-input").mask(SPMaskBehavior, spOptions);
 	},
 });
 </script>
 
 <style>
 input-phone {}
-input-phone .input-group-prepend .input-group-text {position:relative;}
-input-phone .input-group-prepend .input-group-text .list-group {position:absolute; top:100%; left:0; width:250px;}
-input-phone .input-group-prepend .input-group-text .list-group .list-group-item {text-align:left; cursor:pointer;}
 </style>

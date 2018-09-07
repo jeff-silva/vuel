@@ -1,0 +1,57 @@
+<link rel="import" href="../dist/components/input-codemirror.html">
+
+
+
+<div class="row">
+	<div class="col-sm-6">
+		<strong>3024-day</strong>
+		<input-codemirror settings='{theme:"3024-day"}'></input-codemirror><br>
+	</div>
+	<div class="col-sm-6">
+		<strong>3024-night</strong>
+		<input-codemirror settings='{theme:"3024-night"}'></input-codemirror><br>
+	</div>
+	<div class="col-sm-6">
+		<strong>abcdef</strong>
+		<input-codemirror settings='{theme:"abcdef"}'></input-codemirror><br>
+	</div>
+	<div class="col-sm-6">
+		<strong>ambiance</strong>
+		<input-codemirror settings='{theme:"ambiance"}'></input-codemirror><br>
+	</div>
+	<div class="col-sm-6">
+		<strong>ambiance-mobile</strong>
+		<input-codemirror settings='{theme:"ambiance-mobile"}'></input-codemirror><br>
+	</div>
+	<div class="col-sm-6">
+		<strong>base16-dark</strong>
+		<input-codemirror settings='{theme:"base16-dark"}'></input-codemirror><br>
+	</div>
+	<div class="col-sm-6">
+		<strong>base16-light</strong>
+		<input-codemirror settings='{theme:"base16-light"}'></input-codemirror><br>
+	</div>
+	<div class="col-sm-6">
+		<strong>bespin</strong>
+		<input-codemirror settings='{theme:"bespin"}'></input-codemirror><br>
+	</div>
+	<div class="col-sm-6">
+		<strong>blackboard</strong>
+		<input-codemirror settings='{theme:"blackboard"}'></input-codemirror><br>
+	</div>
+	<div class="col-sm-6">
+		<strong>cobalt</strong>
+		<input-codemirror settings='{theme:"cobalt"}'></input-codemirror><br>
+	</div>
+</div>
+
+<script>
+$(document).ready(function($) {
+	$("input-codemirror").each(function() {
+		var code = $(this).data("codemirror");
+		console.log(code);
+	});
+});
+</script>
+
+

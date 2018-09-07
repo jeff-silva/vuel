@@ -6,26 +6,45 @@
 
 		var _customElementApply = function(wrapper, params) {
 			var template = doc.getElementById(tagname);
-			wrapper.innerHTML = '<div>'+ template.innerHTML +'</div>';
-			params.el = wrapper.children[0];
 
-			var paramsData = params.data;
-			if (typeof params.data == "function") {
-				paramsData = params.data();
-			}
-			paramsData = JSON.parse(JSON.stringify(paramsData));
-			for(var i in paramsData) {
-				var attr = wrapper.getAttribute(i)||'';
-				if (attr) {
-					try { eval('attr='+attr); } catch(e) {}
-					paramsData[i] = attr;
-				}
+			var newhtml = template.innerHTML;
+			newhtml = newhtml.replace(/<content><\/content>/g, wrapper.innerHTML);
+			newhtml = newhtml.replace(/&lt;content&gt;&lt;\/content&gt;/g, wrapper.innerHTML);
+			newhtml = '<div>'+newhtml+'<textarea :name="name" style="display:none;">{{ value }}</textarea></div>';
+			wrapper.innerHTML = newhtml;
+
+			// Wrapper attributes
+			var attrs = {};
+			for(var i in wrapper.attributes) {
+				var attr = wrapper.attributes[i];
+				if (typeof attr=="function") continue;
+				if (!attr.name) continue;
+				var value = attr.value;
+				try { eval('value='+value); } catch(e) {};
+				attrs[ attr.name ] = value;
 			}
 
-			params.data = paramsData;
-			params.methods = params.methods||{};
-			for(var i in params.methods) { wrapper[i] = params.methods[i]; }
-			var vm = new Vue(params);
+
+			// Prepare $params
+			params = jQuery.extend(true, {}, params);
+			if (typeof params.data=="function") params.data = params.data();
+			params.data = jQuery.extend(true, params.data, attrs);
+
+
+			// Create Vue
+			var vueParams = jQuery.extend(true, {}, params);
+			if (typeof vueParams.data == "function") {
+				vueParams.data = vueParams.data();
+			}
+			vueParams.data = jQuery.extend(true, vueParams.data, attrs);
+			vueParams.el = wrapper.children[0];
+			var vm = new Vue(vueParams);
+
+			for(var i in params.methods) {
+				wrapper[i] = function() {
+					return params.methods[i].apply(vm, arguments);
+				};
+			}
 		};
 
 
@@ -38,5 +57,7 @@
 		}
 
 		// customElements.define(tagname, NewElement);
-		document.registerElement(tagname, NewElement);	};
+		document.registerElement(tagname, NewElement);
+
+	};
 })(Vue);

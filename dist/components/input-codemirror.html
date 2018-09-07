@@ -1,0 +1,64 @@
+<script src="../vuel.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/emmet-codemirror@1.2.5/dist/emmet.js"></script>
+
+<template id="input-codemirror">
+	<div>
+		<textarea class="input-codemirror-textarea"><content></content></textarea>
+		<!-- <pre>{{ $data }}</pre> -->
+	</div>
+</template>
+
+<style>
+input-codemirror {display:block;}
+</style>
+
+<script>
+Vue.vuel("input-codemirror", {
+	data: {
+		name: "",
+		value: "",
+		settings: {
+			lineNumbers: true,
+			selectionPointer: true,
+			htmlMode: true,
+			mode: "text/html",
+			theme: "ambiance",
+			tabMode: "indent",
+		},
+	},
+
+	mounted: function() {
+		var vm=this, $=jQuery;
+
+		$(vm.$el).find(".input-codemirror-textarea").each(function() {
+			var editor = CodeMirror.fromTextArea(this, vm.settings);
+
+			editor.on('change', function () {
+				Vue.set(vm, "value", editor.getValue());
+			});
+
+			emmetCodeMirror(editor, {
+				'Ctrl-E': 'emmet.expand_abbreviation_with_tab',
+				// 'Cmd-Alt-B': 'emmet.balance_outward',
+			});
+
+			Vue.set(vm, "value", editor.getValue());
+			$(vm.$el.parentNode).data("codemirror", editor);
+		});
+
+		// load theme
+		var t  = document.createElement('link');
+		t.rel  = 'stylesheet';
+		t.type = 'text/css';
+		t.href = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.36.0/theme/'+vm.settings.theme+'.min.css';
+		t.media = 'all';
+		document.getElementsByTagName('head')[0].appendChild(t);
+	},
+});
+</script>

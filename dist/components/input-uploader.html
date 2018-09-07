@@ -1,0 +1,133 @@
+<script src="../vuel.js"></script>
+
+<template id="input-uploader">
+	<label class="card">
+		<div class="card-body">
+			<div v-if="custom==1"><content></content></div>
+			<div v-if="custom==0">
+				<div class="text-center" v-if="! value.name">
+					<i class="fa fa-fw fa-upload"></i>
+					Enviar arquivo
+				</div>
+				<table v-if="value.name">
+					<col width="120px">
+					<col width="*">
+					<tbody>
+						<tr>
+							<td style="padding:20px;">
+								<img :src="value.url" alt="" style="width:100%;" v-if="value.type=='image'">
+							</td>
+							<td>
+								<div><strong>{{ value.name }}</strong></div>
+								<div><small class="text-muted">
+									{{ value.type }} - {{ value.sizeStr }} &nbsp; | &nbsp;
+									<a href="javascript:;" @click="_remove('Deseja realmente remover este anexo?');">Remover</a>
+								</small></div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<input type="file" style="display:none;" class="input-uploader-file">
+
+			<div v-if="loading==1"><br>
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+				</div>
+			</div>
+
+			<div class="text-center" v-for="e in error">
+				<div class="text-danger">{{ e.text }}</div>
+			</div>
+
+			<!-- <pre>{{ $data }}</pre> -->
+		</div>
+	</label>
+</template>
+
+<style>
+input-uploader {display:block;}
+input-uploader > label {display:block; cursor:pointer;}
+</style>
+
+<script>
+Vue.vuel("input-uploader", {
+	data: {
+		name: "",
+		value: {
+			name: "",
+			extension: "",
+			size: "",
+			sizeStr: "", //12MB
+			type: "", //image, audio, video, doc
+			url: "",
+			content: "",
+		},
+		format_only: [],
+		format_not: [],
+		loading: 0,
+		custom: 0,
+		error: [],
+	},
+
+	methods: {
+		_remove: function(conf) {
+			var vm=this;
+			if (conf && !confirm(conf)) return;
+			Vue.set(vm, "value", {
+				name: "",
+				extension: "",
+				size: "",
+				sizeStr: "",
+				type: "",
+				url: "",
+				content: "",
+			});
+		},
+	},
+
+	mounted: function() {
+		var vm=this, $=jQuery;
+
+		var _byteFormat = function(a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]};
+		
+		$(vm.$el).find(".input-uploader-file").on("change", function() {
+			Vue.set(vm, "loading", 1);
+			vm._remove();
+			var file = this.files[0]||false;
+			if (file) {
+				Vue.set(vm, "error", []);
+				var type = file.type.split("/");
+				var ext = file.name.substr(file.name.lastIndexOf('.') + 1);
+
+				if (vm.format_only.length>0 && (vm.format_only.indexOf(ext)==-1 && vm.format_only.indexOf(type[0])==-1)) {
+					vm.error.push({text:"Formato "+ext+" não permitido."});
+				}
+
+				else if (vm.format_not.length>0 && (vm.format_not.indexOf(ext)>=0 || vm.format_not.indexOf(type[0])>=0)) {
+					vm.error.push({text:"Formato "+ext+" não permitido."});
+				}
+
+				if (vm.error.length>0) {
+					Vue.set(vm, "loading", 0);
+					return;
+				}
+				
+				var reader = new FileReader();
+				reader.readAsDataURL(file);
+				reader.onload = function () {
+					Vue.set(vm.value, "name", file.name);
+					Vue.set(vm.value, "extension", ext||"");
+					Vue.set(vm.value, "size", file.size);
+					Vue.set(vm.value, "sizeStr", _byteFormat(file.size));
+					Vue.set(vm.value, "type", type[0]||"");
+					Vue.set(vm.value, "url", reader.result);
+					Vue.set(vm.value, "content", reader.result.split(",")[1]);
+					Vue.set(vm, "loading", 0);
+				};
+			}
+		});
+	},
+});
+</script>
