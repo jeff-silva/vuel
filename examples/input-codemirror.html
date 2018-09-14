@@ -47,10 +47,19 @@
 
 <script>
 $(document).ready(function($) {
-	$("input-codemirror").each(function() {
-		var code = $(this).data("codemirror");
-		console.log(code);
-	});
+	setTimeout(function() {
+		$("input-codemirror").each(function() {
+			var el = this;
+			var code = $(this).data("codemirror");
+			code.on('keyup', function () {
+				var value = code.getValue();
+				$("input-codemirror").not(el).each(function() {
+					var code2 = $(this).data("codemirror");
+					code2.getDoc().setValue(value);
+				});
+			});
+		});
+	}, 1000);
 });
 </script>
 
